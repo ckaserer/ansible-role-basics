@@ -21,6 +21,6 @@ notifications:
 install:
   - pip install molecule
   - pip install molecule[docker]
-  - pip install flake8 ansible-lint
+  - pip install flake8 ansible-lint testinfra
 scripts:
   - molecule test
