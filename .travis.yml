@@ -1,0 +1,26 @@
+---
+version: "~> 1.0"
+os: linux
+language: python
+services:
+  - docker
+notifications:
+  email:
+    on_success: never
+    on_failure: never
+  slack:
+    rooms:
+      secure: D077KIlcJyvC4OiM5hoxQFHQB+NmyyVEkLVOJbGDGstoFudBUL4UMX4aCKbF79gk1q6oJd6jz7L4O9MYmDD81KF4ZdZ13VCkQUTtmjRBaIEBvsL0t29QaaT0BfXu76N6DeZz13ua2KQtB2UGkA1Su0NrlscqWpx2GbPgl090bw5bTSXsxYqd+ui+yQZh/QNJ7hgnAwRf3MPdHEWr09SgdP0gmPqegKNWiJi8FgZYSRX5iYAVWIL1YVH0noIAaj2MFgklJzoeAaP1tFkk8O1wuyTbIS/JBa2omm+YbtBcFMWnErNYJQ6g2L5uIj4TvUgvkXgDahnXHRmGB1hPlz9ebYYMIF2snLpgN4xMJFbjpppcLbUhlfPkcOYneZ71cSjrlVdz5x+dv+G3Ut2WenPOJ4VXksLtnMUqy4bCBl+KQfdDmGRFdcMHwPrtr9PhK6PyRpNGOalrA+mPsT3dPwnmGUoL1ImQNHT3oZYIE9aGHWCA3Xx5h5tllrTLQ4cH+hKm4ZsqFkDp7YcS3et6pEidurG1PcGLUgjqCVKGC8tXZh2drn4vyO/vRK86Qe869T77Mu1eIHE8VNMvJYfBx7jP1PsKBxi+yzsii/3Aw6tY4W+yGEG6v/IhID16wV7zoUxKiAjOKnURT2uHHzW09/++9bynDIdcnClgfCztm+jpqk0=
+    template:
+      - "%{commit_subject}"
+      - build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) @%{branch}
+      - by %{author} %{result} in %{duration}
+    on_success: change
+    on_failure: always
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+install:
+  - pip install molecule
+  - pip install molecule[docker]
+  - pip install flake8
+scripts:
+  - molecule test
