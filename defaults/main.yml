@@ -1,0 +1,5 @@
+---
+# defaults file for basics
+
+basics_packages:
+  - "net-tools"

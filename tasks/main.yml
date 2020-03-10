@@ -1,0 +1,7 @@
+---
+# tasks file for basics
+
+- name: Installing the Basics
+  package:
+    name: "{{ basics_packages }}"
+    state: present

@@ -1,0 +1,24 @@
+---
+galaxy_info:
+  role_name: basics
+  author: ckaserer
+  description: "convenient little tools that make life on the commandline easier"
+  company: "Gepardec IT Services GmbH"
+
+  license: GPLv3
+
+  min_ansible_version: 2.7
+
+  platforms:
+    - name: EL
+      versions:
+        # - 8
+        - 7
+
+  galaxy_tags:
+    - centos
+    - rhel
+    - gepardec
+
+dependencies: []
+...
