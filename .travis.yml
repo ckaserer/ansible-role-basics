@@ -20,6 +20,6 @@ notifications:
     on_failure: always
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
 install:
-  - pip install molecule molecule[docker] yamllint ansible-lint testinfra
+  - pip install molecule docker yamllint ansible-lint testinfra
 scripts:
   - molecule test
