@@ -3,5 +3,5 @@
 
 basics_packages:
   - net-tools
-  - wget
   - vim
+  - wget
