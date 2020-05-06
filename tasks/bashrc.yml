@@ -1,0 +1,42 @@
+---
+- name: find latest bashrc release
+  uri:                                                               
+    url: https://api.github.com/repos/ckaserer/bash-bashrc/releases/latest
+    return_content: true                                             
+  register: json_reponse                                             
+
+- name: get latest bashrc release tar.gz
+  get_url:                                                           
+    url: "{{ json_reponse.json.tarball_url }}"                       
+    dest: /tmp/bash-bashrc.tar.gz 
+
+- name: create bashrc folder
+  file:
+    path: /opt/bashrc
+    state: directory
+    mode: '0755'
+
+- name: Unarchive bashrc.tar.gz
+  unarchive:
+    src: /tmp/bash-bashrc.tar.gz
+    dest: /opt/bashrc
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: add bashrc to current user
+  blockinfile:
+    path: ~/.bashrc
+    block: |
+      if [ -f /opt/bashrc/bashrc ]; then
+        . /opt/bashrc/bashrc
+      fi
+
+- name: add bashrc to all basics user
+  blockinfile:
+    path: "/home/{{ item }}/.bashrc"
+    block: |
+        if [ -f /opt/bashrc/bashrc ]; then
+        . /opt/bashrc/bashrc
+        fi
+  with_items: "{{ basics_users }}"
+...

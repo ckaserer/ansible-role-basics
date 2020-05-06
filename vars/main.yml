@@ -1,2 +1,12 @@
 ---
 # vars file for basics
+
+basics_desktop_packages:
+  - "@Xfce"
+  #- "@KDE"
+  #- "@KDE Plasma Workspaces"
+  - "@X Window System"
+  - "@Desktop"
+  - "@Fonts"
+  - "@General Purpose Desktop"
+  - chromium

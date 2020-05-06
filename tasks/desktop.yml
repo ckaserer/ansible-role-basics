@@ -1,0 +1,57 @@
+---
+- name: install epel-release
+  yum:
+    name: epel-release
+    state: present
+
+- name: install desktop
+  yum:
+    name: "{{ basics_desktop_packages }}"
+    state: present
+  register: desktop
+  failed_when: desktop.rc != 1 and desktop.rc != 0
+   
+- name: get default runlevel
+  command: systemctl get-default
+  register: runlevel
+
+- name: Set graphical runlevel
+  command: systemctl set-default graphical.target
+  when: runlevel.stdout != "graphical.target"
+
+- name: is graphical currently active
+  command: systemctl is-active graphical.target
+  register: graphical
+  failed_when: graphical.rc != 3 and graphical.rc != 0
+
+- name: Switch to graphical runlevel
+  command: systemctl isolate graphical.target
+  when: graphical.stdout != "active"
+
+- name: Enable autologin
+  template:
+    src: gdm.custom.conf.j2
+    dest: /etc/gdm/custom.conf
+
+- name: create backgrounds folder
+  file:
+    path: /usr/share/backgrounds/images
+    state: directory
+    mode: '0755'
+
+- name: set background
+  copy:
+    src: wallpaper.jpg
+    dest: /usr/share/backgrounds/images/default.png
+
+- name: use default panel
+  copy:
+    src: /etc/xdg/xfce4/panel/default.xml
+    dest: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+    remote_src: yes
+   
+- name: Restart gdm service
+  service:
+    name: gdm
+    state: restarted
+...

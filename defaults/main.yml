@@ -2,6 +2,19 @@
 # defaults file for basics
 
 basics_packages:
+  - git
   - net-tools
   - vim
   - wget
+
+basics_users:
+  - vagrant
+
+basics_bashrc: true
+  
+basics_desktop:
+  enabled: true
+  autologin_user: vagrant
+
+basics_timezone: Europe/Vienna
+...

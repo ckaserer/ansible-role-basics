@@ -1,0 +1,14 @@
+---
+- name: create users
+  user:
+    name: "{{ item }}"
+    password: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6 encrypt=sha512_crypt') }}"     # | password_hash('sha512', ) }}"
+  with_items: "{{ basics_users }}"
+
+- name: copy password
+  copy:
+    content: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6') }}"
+    dest: "/home/{{ item }}/.password"
+    owner: "{{ item }}"
+  with_items: "{{ basics_users }}"
+...
