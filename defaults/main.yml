@@ -7,14 +7,13 @@ basics_packages:
   - vim
   - wget
 
-basics_users:
-  - vagrant
+basics_users: []
 
 basics_bashrc: true
   
 basics_desktop:
-  enabled: true
-  autologin_user: vagrant
+  enabled: false
+  autologin_user: gepardec
 
 basics_timezone: Europe/Vienna
 ...
