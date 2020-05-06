@@ -9,6 +9,7 @@
     name: "{{ basics_desktop_packages }}"
     state: present
   register: desktop
+  changed_when: desktop.rc == 0
   failed_when: desktop.rc != 1 and desktop.rc != 0
 
 - name: get default runlevel
