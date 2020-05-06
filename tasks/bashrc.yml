@@ -1,14 +1,14 @@
 ---
 - name: find latest bashrc release
-  uri:                                                               
+  uri:
     url: https://api.github.com/repos/ckaserer/bash-bashrc/releases/latest
-    return_content: true                                             
-  register: json_reponse                                             
+    return_content: true
+  register: json_reponse
 
 - name: get latest bashrc release tar.gz
-  get_url:                                                           
-    url: "{{ json_reponse.json.tarball_url }}"                       
-    dest: /tmp/bash-bashrc.tar.gz 
+  get_url:
+    url: "{{ json_reponse.json.tarball_url }}"
+    dest: /tmp/bash-bashrc.tar.gz
 
 - name: create bashrc folder
   file:

@@ -1,2 +1,8 @@
 ---
 # handlers file for basics
+- name: restart gdm
+  service:
+    name: gdm
+    state: restarted
+  listen: "restart gdm"
+...

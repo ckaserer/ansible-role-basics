@@ -10,10 +10,11 @@
     state: present
   register: desktop
   failed_when: desktop.rc != 1 and desktop.rc != 0
-   
+
 - name: get default runlevel
   command: systemctl get-default
   register: runlevel
+  changed_when: false
 
 - name: Set graphical runlevel
   command: systemctl set-default graphical.target
@@ -23,6 +24,7 @@
   command: systemctl is-active graphical.target
   register: graphical
   failed_when: graphical.rc != 3 and graphical.rc != 0
+  changed_when: false
 
 - name: Switch to graphical runlevel
   command: systemctl isolate graphical.target
@@ -32,6 +34,7 @@
   template:
     src: gdm.custom.conf.j2
     dest: /etc/gdm/custom.conf
+  notify: "restart gdm"
 
 - name: create backgrounds folder
   file:
@@ -43,15 +46,13 @@
   copy:
     src: wallpaper.jpg
     dest: /usr/share/backgrounds/images/default.png
+  notify: "restart gdm"
 
 - name: use default panel
   copy:
     src: /etc/xdg/xfce4/panel/default.xml
     dest: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
     remote_src: yes
-   
-- name: Restart gdm service
-  service:
-    name: gdm
-    state: restarted
+  notify: "restart gdm"
+
 ...

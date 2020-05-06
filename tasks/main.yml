@@ -4,7 +4,7 @@
 - name: Set timezone to {{ basics_timezone }}
   timezone:
     name: "{{ basics_timezone }}"
-  
+
 - name: Include user tasks
   include_tasks: "users.yml"
   when: basics_users|default([])|length > 0
