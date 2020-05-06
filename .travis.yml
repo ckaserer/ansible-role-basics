@@ -1,6 +1,7 @@
 ---
 version: "~> 1.0"
 os: linux
+dist: bionic
 language: python
 services:
   - docker
@@ -20,6 +21,13 @@ notifications:
     on_failure: always
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
 install:
-  - pip install molecule docker yamllint ansible-lint testinfra
-scripts:
-  - molecule test
+  - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables
+    libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev python3-pip python3-setuptools
+  - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
+  - sudo dpkg -i vagrant_2.2.7_x86_64.deb
+  - sudo vagrant --version
+  - sudo vagrant plugin install vagrant-libvirt
+  - sudo -H pip3 install molecule yamllint ansible-lint molecule_vagrant passlib
+script:
+  - sudo molecule test --scenario-name ci
+...

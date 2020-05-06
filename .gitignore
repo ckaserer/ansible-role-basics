@@ -295,3 +295,6 @@ __pycache__/
 
 # other
 .localized
+
+# python virtual env
+.env
