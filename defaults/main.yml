@@ -14,6 +14,10 @@ basics_bashrc: true
 basics_desktop:
   enabled: false
   autologin_user: gepardec
+  remote_desktop:
+    enabled: false
+    version: "6.9.2_1"
 
 basics_timezone: Europe/Vienna
+
 ...

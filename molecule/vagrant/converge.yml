@@ -14,3 +14,6 @@
         basics_desktop:
           enabled: true
           autologin_user: vagrant
+          remote_desktop:
+            enabled: true
+            version: "6.9.2_1"

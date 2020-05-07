@@ -49,6 +49,12 @@
     dest: /usr/share/backgrounds/images/default.png
   notify: "restart gdm"
 
+- name: install remote desktop
+  yum:
+    name: "https://download.nomachine.com/packages/6.9-PRODUCTION/Linux/nomachine-enterprise-desktop_{{ basics_desktop.remote_desktop.version }}_x86_64.rpm"
+    state: present
+  when: basics_desktop.remote_desktop.enabled
+
 - name: use default panel
   copy:
     src: /etc/xdg/xfce4/panel/default.xml
