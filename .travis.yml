@@ -29,7 +29,7 @@ install:
   - sudo dpkg -i vagrant_${vagrant_version}_x86_64.deb
   - sudo vagrant --version
   - sudo vagrant plugin install vagrant-libvirt
-  - sudo pip install -r requirements.txt
+  - sudo pip install -r requirements.txt --ignore-installed
 env:
   jobs:
     - SCENARIO=defaults
