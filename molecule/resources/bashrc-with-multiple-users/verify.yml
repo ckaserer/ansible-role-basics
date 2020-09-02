@@ -26,7 +26,7 @@
         register: verify_current_user_bashrc
         failed_when: not verify_current_user_bashrc.changed
 
-      - name: Check that /opt/bashrc is not present in Users .bashrc
+      - name: Check that /opt/bashrc is present in Users .bashrc
         blockinfile:
           path: /home/{{ item }}/.bashrc
           block: |
@@ -38,9 +38,9 @@
           - vagrant
           - gepardec
         register: verify_users_bashrc
-        failed_when: not verify_users_bashrc.changed
+        failed_when: verify_users_bashrc.changed
 
-      - name: Check that /etc/bashrc contains /opt/bashrc/bashrc
+      - name: Check that /etc/bashrc does not contain /opt/bashrc/bashrc
         blockinfile:
           path: /etc/bashrc
           block: |
@@ -49,5 +49,5 @@
             fi
         check_mode: yes
         register: verify_etc_bashrc
-        failed_when: verify_etc_bashrc.changed
+        failed_when: not verify_etc_bashrc.changed
 ...

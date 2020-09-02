@@ -1,0 +1,3 @@
+molecule 
+ansible-lint 
+molecule_vagrant

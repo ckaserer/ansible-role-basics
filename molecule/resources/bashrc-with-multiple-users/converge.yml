@@ -10,11 +10,11 @@
         vars:
           basics_users:
             enabled: true
-            sudo: false
+            sudo: true
             users:
               - vagrant
               - gepardec
           basics_bashrc: 
             enabled: true
-            global: true
+            global: false
 ...

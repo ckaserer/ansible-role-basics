@@ -3,6 +3,8 @@ version: "~> 1.0"
 os: linux
 dist: bionic
 language: python
+python:
+  - "3.6"
 notifications:
   email:
     on_success: never
@@ -20,20 +22,20 @@ notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
 install:
   - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables
-    libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev python3-pip python3-setuptools
+    libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
   - vagrant_version=$(curl https://releases.hashicorp.com/vagrant/ | grep href | grep -v '\.\.' | 
     head -1 | sed -E 's/.*([[:digit:]]+(\.[[:digit:]]+(\.[[:digit:]]+)+)+).*/\1/') && 
     sudo wget -nv https://releases.hashicorp.com/vagrant/${vagrant_version}/vagrant_${vagrant_version}_x86_64.deb
   - sudo dpkg -i vagrant_${vagrant_version}_x86_64.deb
   - sudo vagrant --version
   - sudo vagrant plugin install vagrant-libvirt
-  - sudo -H pip3 install molecule yamllint ansible-lint molecule_vagrant passlib
+  - sudo pip install -r requirements.txt
 env:
   jobs:
-    jobs:
-      - SCENARIO=defaults
-      - SCENARIO=bashrc
-      - SCENARIO=bashrc-global
+    - SCENARIO=defaults
+    - SCENARIO=bashrc
+    - SCENARIO=bashrc-global
+    - SCENARIO=bashrc-with-multiple-users
 script:
   - sudo molecule test --scenario-name ci-${SCENARIO}
 ...
