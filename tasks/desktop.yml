@@ -1,65 +1,67 @@
 ---
-- name: install epel-release
-  yum:
-    name: epel-release
-    state: present
+  - name: Install epel-release
+    yum:
+      name: epel-release
+      state: present
 
-- name: install desktop
-  yum:
-    name: "{{ basics_desktop_packages }}"
-    state: present
-  register: desktop
-  changed_when: desktop.rc == 0
-  failed_when: desktop.rc != 1 and desktop.rc != 0
+  - name: Install desktop
+    yum:
+      name: "{{ basics_desktop_packages }}"
+      state: present
+    register: desktop
+    changed_when: desktop.rc == 0
+    failed_when: desktop.rc != 1 and desktop.rc != 0
 
-- name: get default runlevel
-  command: systemctl get-default
-  register: runlevel
-  changed_when: false
+  - name: Get default runlevel
+    command: systemctl get-default
+    register: runlevel
+    changed_when: false
 
-- name: Set graphical runlevel
-  command: systemctl set-default graphical.target
-  when: runlevel.stdout != "graphical.target"
+  - name: Set graphical runlevel
+    command: systemctl set-default graphical.target
+    when: runlevel.stdout != "graphical.target"
 
-- name: is graphical currently active
-  command: systemctl is-active graphical.target
-  register: graphical
-  failed_when: graphical.rc != 3 and graphical.rc != 0
-  changed_when: false
+  - name: Is graphical currently active
+    command: systemctl is-active graphical.target
+    register: graphical
+    failed_when: graphical.rc != 3 and graphical.rc != 0
+    changed_when: false
 
-- name: Switch to graphical runlevel
-  command: systemctl isolate graphical.target
-  when: graphical.stdout != "active"
+  - name: Switch to graphical runlevel
+    command: systemctl isolate graphical.target
+    when: graphical.stdout != "active"
 
-- name: Enable autologin
-  template:
-    src: gdm.custom.conf.j2
-    dest: /etc/gdm/custom.conf
-  notify: "restart gdm"
+  - name: Enable autologin
+    template:
+      src: gdm.custom.conf.j2
+      dest: /etc/gdm/custom.conf
+      mode: '0544'
+    notify: "restart gdm"
 
-- name: create backgrounds folder
-  file:
-    path: /usr/share/backgrounds/images
-    state: directory
-    mode: '0755'
+  - name: Create backgrounds folder
+    file:
+      path: /usr/share/backgrounds/images
+      state: directory
+      mode: '0755'
 
-- name: set background
-  copy:
-    src: wallpaper.jpg
-    dest: /usr/share/backgrounds/images/default.png
-  notify: "restart gdm"
+  - name: Set background
+    copy:
+      src: wallpaper.jpg
+      dest: /usr/share/backgrounds/images/default.png
+      mode: '0644'
+    notify: "restart gdm"
 
-- name: install remote desktop
-  yum:
-    name: "https://download.nomachine.com/packages/6.9-PRODUCTION/Linux/nomachine-enterprise-desktop_{{ basics_desktop.remote_desktop.version }}_x86_64.rpm"
-    state: present
-  when: basics_desktop.remote_desktop.enabled
+  - name: Install remote desktop
+    yum:
+      name: "https://download.nomachine.com/packages/6.9-PRODUCTION/Linux/nomachine-enterprise-desktop_{{ basics_desktop.remote_desktop.version }}_x86_64.rpm"
+      state: present
+    when: basics_desktop.remote_desktop.enabled
 
-- name: use default panel
-  copy:
-    src: /etc/xdg/xfce4/panel/default.xml
-    dest: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
-    remote_src: yes
-  notify: "restart gdm"
-
+  - name: Use default panel
+    copy:
+      src: /etc/xdg/xfce4/panel/default.xml
+      dest: /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml
+      remote_src: yes
+      mode: '0644'
+    notify: "restart gdm"
 ...

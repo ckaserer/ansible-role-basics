@@ -1,42 +1,64 @@
 ---
-- name: find latest bashrc release
-  uri:
-    url: https://api.github.com/repos/ckaserer/bash-bashrc/releases/latest
-    return_content: true
-  register: json_reponse
+  - name: Find latest bashrc release
+    uri:
+      url: https://api.github.com/repos/ckaserer/bash-bashrc/releases/latest
+      return_content: true
+    register: json_reponse
 
-- name: get latest bashrc release tar.gz
-  get_url:
-    url: "{{ json_reponse.json.tarball_url }}"
-    dest: /tmp/bash-bashrc.tar.gz
+  - name: Get latest bashrc release tar.gz
+    get_url:
+      url: "{{ json_reponse.json.tarball_url }}"
+      dest: /tmp/bash-bashrc.tar.gz
 
-- name: create bashrc folder
-  file:
-    path: /opt/bashrc
-    state: directory
-    mode: '0755'
+  - name: Set bashrc location
+    set_fact:
+      basics_bashrc_folder: "{{ '/opt/bashrc' if basics_users.enabled or basics_bashrc.global else '~/.custom-bashrc' }}"
 
-- name: Unarchive bashrc.tar.gz
-  unarchive:
-    src: /tmp/bash-bashrc.tar.gz
-    dest: /opt/bashrc
-    remote_src: yes
-    extra_opts: [--strip-components=1]
+  - name: Bashrc folder location
+    debug:
+      var: basics_bashrc_folder
 
-- name: add bashrc to current user
-  blockinfile:
-    path: ~/.bashrc
-    block: |
-      if [ -f /opt/bashrc/bashrc ]; then
-        . /opt/bashrc/bashrc
-      fi
+  - name: Create bashrc folder
+    file:
+      path: "{{ basics_bashrc_folder }}"
+      state: directory
+      mode: '0755'
 
-- name: add bashrc to all basics user
-  blockinfile:
-    path: "/home/{{ item }}/.bashrc"
-    block: |
-        if [ -f /opt/bashrc/bashrc ]; then
-        . /opt/bashrc/bashrc
+  - name: Unarchive bashrc.tar.gz
+    unarchive:
+      src: /tmp/bash-bashrc.tar.gz
+      dest: "{{ basics_bashrc_folder }}"
+      remote_src: yes
+      extra_opts: [--strip-components=1]
+      mode: '0755'
+
+  - name: Add bashrc to current user
+    blockinfile:
+      path: ~/.bashrc
+      block: |
+        if [ -f {{ basics_bashrc_folder }}/bashrc ]; then
+          . {{ basics_bashrc_folder }}/bashrc
         fi
-  with_items: "{{ basics_users }}"
+    when: not basics_bashrc.global
+
+  - name: Add bashrc to all basics user
+    blockinfile:
+      path: "/home/{{ item }}/.bashrc"
+      block: |
+          if [ -f {{ basics_bashrc_folder }}/bashrc ]; then
+          . {{ basics_bashrc_folder }}/bashrc
+          fi
+    with_items: "{{ basics_users.users }}"
+    when:
+      - basics_users.enabled
+      - not basics_bashrc.global
+
+  - name: Add bashrc globally
+    blockinfile:
+      path: "/etc/bashrc"
+      block: |
+          if [ -f {{ basics_bashrc_folder }}/bashrc ]; then
+          . {{ basics_bashrc_folder }}/bashrc
+          fi
+    when: basics_bashrc.global
 ...

@@ -1,29 +1,30 @@
 ---
-# tasks file for basics
+  - name: Set timezone to {{ basics_timezone.value }}
+    timezone:
+      name: "{{ basics_timezone.value }}"
+    when: basics_timezone.enabled
 
-- name: Set timezone to {{ basics_timezone }}
-  timezone:
-    name: "{{ basics_timezone }}"
+  - name: Include user tasks
+    include_tasks: "users.yml"
+    when: basics_users.enabled
 
-- name: Include user tasks
-  include_tasks: "users.yml"
-  when: basics_users|default([])|length > 0
+  - name: Include bashrc tasks
+    include_tasks: "bashrc.yml"
+    when: basics_bashrc.enabled
 
-- name: Include bashrc tasks
-  include_tasks: "bashrc.yml"
-  when: basics_bashrc
+  - name: Include desktop tasks
+    include_tasks: "desktop.yml"
+    when: basics_desktop.enabled
 
-- name: Include desktop tasks
-  include_tasks: "desktop.yml"
-  when: basics_desktop.enabled
+  - name: Install epel-release
+    yum:
+      name: epel-release
+      state: present
+    when: basics_packages.epel
 
-- name: install epel-release
-  yum:
-    name: epel-release
-    state: present
-
-- name: Installing the Basics
-  package:
-    name: "{{ basics_packages }}"
-    state: present
+  - name: Install the Basics
+    package:
+      name: "{{ basics_packages.packages }}"
+      state: present
+    when: basics_packages.enabled
 ...

@@ -1,14 +1,34 @@
 ---
-- name: create users
-  user:
-    name: "{{ item }}"
-    password: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6 encrypt=sha512_crypt') }}"     # | password_hash('sha512', ) }}"
-  with_items: "{{ basics_users }}"
+  - name: Make sure we have a 'wheel' group
+    group:
+      name: wheel
+      state: present
+    when: basics_users.sudo
 
-- name: copy password
-  copy:
-    content: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6') }}"
-    dest: "/home/{{ item }}/.password"
-    owner: "{{ item }}"
-  with_items: "{{ basics_users }}"
+  - name: Allow 'wheel' group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
+      mode: '0440'
+    when: basics_users.sudo
+
+  - name: Create users
+    user:
+      name: "{{ item }}"
+      password: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6 encrypt=sha512_crypt') }}"
+      groups: "{{ 'wheel' if basics_users.sudo else '' | default('') }}"
+      append: yes
+      state: present
+      createhome: yes
+    with_items: "{{ basics_users.users }}"
+
+  - name: Copy password
+    copy:
+      content: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6') }}"
+      dest: "/home/{{ item }}/.password"
+      owner: "{{ item }}"
+    with_items: "{{ basics_users.users }}"
 ...

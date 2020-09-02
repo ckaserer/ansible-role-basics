@@ -1,23 +1,34 @@
 ---
-# defaults file for basics
-
-basics_packages:
-  - git
-  - net-tools
-  - vim
-  - wget
-
-basics_users: []
-
-basics_bashrc: true
-  
-basics_desktop:
-  enabled: false
-  autologin_user: gepardec
-  remote_desktop:
+  basics_packages:
     enabled: false
-    version: "6.9.2_1"
-
-basics_timezone: Europe/Vienna
-
+    epel: false
+    packages:
+      - git
+      - net-tools
+      - vim
+      - wget
+  
+  basics_users:
+    enabled: false
+    sudo: false
+    users: []
+  
+  basics_keymap:
+    enabled: false
+    value: DE
+  
+  basics_bashrc: 
+    enabled: true
+    global: false
+    
+  basics_desktop:
+    enabled: false
+    autologin_user: gepardec
+    remote_desktop:
+      enabled: false
+      version: "6.9.2_1"
+  
+  basics_timezone: 
+    enabled: false
+    value: Europe/Vienna
 ...

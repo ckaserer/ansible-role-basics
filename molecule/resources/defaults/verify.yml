@@ -1,0 +1,15 @@
+---
+  - name: Verify
+    hosts: all
+    become: true
+    tasks:
+      - name: get bashrc file info
+        stat:
+          path: /opt/bashrc/bashrc
+        register: verify_bashrc
+
+      - name: check that bashrc exists
+        assert:
+          that: verify_bashrc.stat.exists
+          fail_msg: "could not locate bashrc"
+...

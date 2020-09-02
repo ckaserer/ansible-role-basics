@@ -3,8 +3,6 @@ version: "~> 1.0"
 os: linux
 dist: bionic
 language: python
-services:
-  - docker
 notifications:
   email:
     on_success: never
@@ -23,11 +21,19 @@ notifications:
 install:
   - sudo apt-get update && sudo apt-get install -y bridge-utils dnsmasq-base ebtables
     libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev python3-pip python3-setuptools
-  - sudo wget -nv https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb
-  - sudo dpkg -i vagrant_2.2.7_x86_64.deb
+  - vagrant_version=$(curl https://releases.hashicorp.com/vagrant/ | grep href | grep -v '\.\.' | 
+    head -1 | sed -E 's/.*([[:digit:]]+(\.[[:digit:]]+(\.[[:digit:]]+)+)+).*/\1/') && 
+    sudo wget -nv https://releases.hashicorp.com/vagrant/${vagrant_version}/vagrant_${vagrant_version}_x86_64.deb
+  - sudo dpkg -i vagrant_${vagrant_version}_x86_64.deb
   - sudo vagrant --version
   - sudo vagrant plugin install vagrant-libvirt
   - sudo -H pip3 install molecule yamllint ansible-lint molecule_vagrant passlib
+env:
+  jobs:
+    jobs:
+      - SCENARIO=defaults
+      - SCENARIO=bashrc
+      - SCENARIO=bashrc-global
 script:
-  - sudo molecule test --scenario-name ci
+  - sudo molecule test --scenario-name ci-${SCENARIO}
 ...
