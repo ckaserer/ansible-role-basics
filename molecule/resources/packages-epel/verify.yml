@@ -1,0 +1,15 @@
+---
+  - name: Verify
+    hosts: all
+    become: true
+    tasks:
+      - name: Install the Basics
+        package:
+          name: "{{ item }}"
+          state: present
+        with_items:
+          - epel-release
+        check_mode: yes
+        register: install_packages
+        failed_when: install_packages.changed
+...

@@ -37,6 +37,9 @@ env:
     - SCENARIO=bashrc
     - SCENARIO=bashrc-global
     - SCENARIO=bashrc-with-multiple-users
+    - SCENARIO=packages
+    - SCENARIO=packages-epel
+    - SCENARIO=timezone
 script:
   - molecule test --scenario-name ci-${SCENARIO}
 ...
