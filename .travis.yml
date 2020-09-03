@@ -29,7 +29,8 @@ install:
   - sudo dpkg -i vagrant_${vagrant_version}_x86_64.deb
   - sudo vagrant --version
   - sudo vagrant plugin install vagrant-libvirt
-  - sudo pip install -r requirements.txt --ignore-installed
+  - sudo chown -R ${USER}:${USER} /home/travis /opt/vagrant/embedded/gems
+  - pip install -r requirements.txt
 env:
   jobs:
     - SCENARIO=defaults
@@ -37,5 +38,5 @@ env:
     - SCENARIO=bashrc-global
     - SCENARIO=bashrc-with-multiple-users
 script:
-  - sudo molecule test --scenario-name ci-${SCENARIO}
+  - molecule test --scenario-name ci-${SCENARIO}
 ...
