@@ -30,5 +30,6 @@
       content: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6') }}"
       dest: "/home/{{ item }}/.password"
       owner: "{{ item }}"
+      mode: '0400'
     with_items: "{{ basics_users.users }}"
 ...

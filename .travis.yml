@@ -25,11 +25,11 @@ install:
     libvirt-bin libvirt-dev qemu-kvm qemu-utils ruby-dev
   - vagrant_version=$(curl https://releases.hashicorp.com/vagrant/ | grep href | grep -v '\.\.' | 
     head -1 | sed -E 's/.*([[:digit:]]+(\.[[:digit:]]+(\.[[:digit:]]+)+)+).*/\1/') && 
-    sudo wget -nv https://releases.hashicorp.com/vagrant/${vagrant_version}/vagrant_${vagrant_version}_x86_64.deb
+    wget -nv https://releases.hashicorp.com/vagrant/${vagrant_version}/vagrant_${vagrant_version}_x86_64.deb
   - sudo dpkg -i vagrant_${vagrant_version}_x86_64.deb
-  - sudo vagrant --version
-  - sudo vagrant plugin install vagrant-libvirt
-  - sudo chown -R ${USER}:${USER} /home/travis /opt/vagrant/embedded/gems
+  - sudo chown -R ${USER}:${USER} /home/travis /opt/vagrant/embedded/gems /var/run/libvirt
+  - vagrant --version
+  - vagrant plugin install vagrant-libvirt
   - pip install -r requirements.txt
 env:
   jobs:
