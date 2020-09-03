@@ -8,6 +8,8 @@
           apply:
             become: true
         vars:
+          basics_bashrc:
+            enabled: false
           basics_packages:
             enabled: false
             epel: true

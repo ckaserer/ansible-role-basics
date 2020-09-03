@@ -10,7 +10,12 @@
         vars:
           basics_bashrc:
             enabled: false
-          basics_timezone: 
+          basics_packages:
             enabled: true
-            value: Europe/Vienna
+            epel: false
+            packages:
+              - git
+              - net-tools
+              - vim
+              - wget
 ...
