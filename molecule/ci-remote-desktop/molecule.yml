@@ -13,8 +13,8 @@
   provisioner:
     name: ansible
     playbooks:
-      converge: ../resources/desktop/converge.yml
-      verify: ../resources/desktop/verify.yml
+      converge: ../resources/remote-desktop/converge.yml
+      verify: ../resources/remote-desktop/verify.yml
   verifier:
     name: ansible
   lint: |

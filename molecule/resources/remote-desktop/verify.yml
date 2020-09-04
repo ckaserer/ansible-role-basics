@@ -12,12 +12,12 @@
         register: gdm
         failed_when: gdm.changed
 
-      - name: Check remotedesktop is running
-        service:
-          name: nomachine
-          state: started
-          enabled: true
-        check_mode: true
-        register: nomachine
-        failed_when: nomachine.changed
+      # - name: Check remotedesktop is running
+      #   service:
+      #     name: nomachine
+      #     state: started
+      #     enabled: true
+      #   check_mode: true
+      #   register: nomachine
+      #   failed_when: nomachine.changed
 ...
