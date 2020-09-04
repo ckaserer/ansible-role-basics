@@ -1,0 +1,80 @@
+---
+  - name: Verify
+    hosts: all
+    become: true
+    tasks:
+      - name: check timezone is set to Europe/Vienna
+        timezone:
+          name: Europe/Vienna
+        register: verify_timezone
+    
+      - name: assert that timzone is set to Europe/Vienna
+        assert:
+          that: "verify_timezone.changed is false"
+          fail_msg: "it seems like your timezone was not properly set up"
+    
+      - name: check all users exist
+        user:
+          name: "{{ item }}"
+          password: "{{ lookup('password', '/tmp/.' + item + '_password chars=ascii_letters length=6 encrypt=sha512_crypt') }}"     # | password_hash('sha512', ) }}"
+        with_items:
+          - vagrant
+        register: verify_users
+    
+      - name: assert that all users exist
+        assert:
+          that: "verify_users.changed is false"
+          fail_msg: "it seems like your user was not created properly"
+    
+      - name: get bashrc file info
+        stat:
+          path: /opt/bashrc/bashrc
+        register: verify_bashrc
+    
+      - name: check that bashrc exists
+        assert:
+          that: verify_bashrc.stat.exists
+          fail_msg: "could not locate bashrc"
+    
+      - name: check gdm is enabled and started
+        service:
+          name: gdm
+          state: started
+          enabled: true
+        register: verify_gdm
+    
+      - name: assert that epel-release is enabled
+        assert:
+          that: "verify_gdm.changed is false"
+          fail_msg: "it seems gdm was not started / enabled"
+    
+      - name: check if epel-release is enabled
+        yum:
+          name: epel-release
+          state: present
+        register: verify_epel
+        failed_when: verify_epel.changed
+    
+      - name: assert that epel-release is enabled
+        assert:
+          that: "verify_epel.changed is false"
+          fail_msg: "it seems epel was not enabled properly"
+    
+      - name: check basic packages are installed
+        become: true
+        package:
+          name: "{{ item }}"
+          state: present
+        with_items:
+            - git
+            - net-tools
+            - vim
+            - wget
+        register: verify_packages
+    
+      - name: assert that no new packages have been installed in the verification step
+        assert:
+          that: "verify_packages.changed is false"
+          fail_msg: "it seems not all packages have been installed properly by the playbook"
+
+...

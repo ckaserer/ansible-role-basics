@@ -5,7 +5,7 @@
     when: basics_timezone.enabled
 
   - name: Apply keymap {{ basics_keymap.value }}
-    shell: "localectl set-keymap {{ basics_keymap.value }}"
+    command: "localectl set-keymap {{ basics_keymap.value }}"
     changed_when: False
     when: basics_keymap.enabled
 

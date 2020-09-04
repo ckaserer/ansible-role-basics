@@ -37,6 +37,8 @@
       dest: /etc/gdm/custom.conf
       mode: '0544'
     notify: "restart gdm"
+    when:
+      - basics_desktop.autologin_user is defined
 
   - name: Create backgrounds folder
     file:
@@ -51,11 +53,38 @@
       mode: '0644'
     notify: "restart gdm"
 
+  - name: get latest remote desktop download page
+    uri:
+      url: "https://www.nomachine.com/download/download&id=2"
+      return_content: yes
+      dest: /tmp/bashrc_remote_desktop_download_page
+    changed_when: False
+    register: bashrc_remote_desktop_download_page
+    notify: cleanup
+
+  - name: get latest remote desktop version
+    shell: set -o pipefail &&
+      cat /tmp/bashrc_remote_desktop_download_page |
+      grep ">Download</a></div></div>" |
+      sed -E 's/.*([[:digit:]]+(\.[[:digit:]]+(\.[[:digit:]]+(_[[:digit:]]+)+)+)+)_amd64\.deb.*/\1/'
+    changed_when: False
+    register: bashrc_remote_desktop_full_version
+
+  - name: get version path for remote desktop
+    shell: set -o pipefail &&
+      echo "{{ bashrc_remote_desktop_full_version.stdout }}" |
+      sed -E "s/^([[:digit:]]+(\.[[:digit:]]+)).*/\1/"
+    changed_when: False
+    register: bashrc_remote_desktop_version_path
+
   - name: Install remote desktop
     yum:
-      name: "https://download.nomachine.com/packages/6.9-PRODUCTION/Linux/nomachine-enterprise-desktop_{{ basics_desktop.remote_desktop.version }}_x86_64.rpm"
+      name: "https://download.nomachine.com/packages/{{ bashrc_remote_desktop_version_path.stdout }}
+        -PRODUCTION/Linux/nomachine-enterprise-desktop_{{ bashrc_remote_desktop_full_version.stdout }}_x86_64.rpm"
       state: present
-    when: basics_desktop.remote_desktop.enabled
+    when:
+      - basics_desktop.remote_desktop is defined
+      - basics_desktop.remote_desktop.enabled
 
   - name: Use default panel
     copy:

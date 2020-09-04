@@ -43,15 +43,22 @@ env:
     - SCENARIO=bashrc-global
     - SCENARIO=bashrc-with-multiple-users
     
+    - SCENARIO=desktop
+
     - SCENARIO=keymap
     
     - SCENARIO=packages
     - SCENARIO=packages-epel
     
+    - SCENARIO=remote-desktop
+    
     - SCENARIO=timezone
     
     - SCENARIO=users
     - SCENARIO=users-with-sudo
+
+    - SCENARIO=all
+      
 script:
   - molecule test --scenario-name ci-${SCENARIO}
 ...

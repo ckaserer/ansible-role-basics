@@ -1,0 +1,37 @@
+---
+  - name: Converge
+    hosts: all
+    tasks:
+      - name: "Include ansible-role-basics"
+        include_role:
+          name: "ansible-role-basics"
+          apply:
+            become: true
+        vars:
+          basics_packages:
+            enabled: true
+            packages:
+              - git
+              - net-tools
+              - vim
+              - wget        
+          basics_users:
+            enabled: true
+            sudo: true
+            users:
+              - vagrant
+          basics_keymap:
+            enabled: ture
+            value: de
+          basics_bashrc: 
+              enabled: true
+              global: false
+          basics_desktop:
+            enabled: true
+            autologin_user: vagrant
+            remote_desktop:
+              enabled: true
+          basics_timezone: 
+            enabled: true
+            value: Europe/Vienna
+...

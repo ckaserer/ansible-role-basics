@@ -13,4 +13,9 @@
           basics_keymap:
             enabled: true
             value: de
+          basics_desktop:
+            enabled: true
+            autologin_user: vagrant
+            remote_desktop:
+              enabled: false
 ...

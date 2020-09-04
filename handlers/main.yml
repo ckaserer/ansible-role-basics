@@ -3,5 +3,13 @@
     service:
       name: gdm
       state: restarted
+      enabled: true
     listen: "restart gdm"
+
+  - name: cleanup tmp files
+    file:
+      path: /tmp/bashrc_remote_desktop_download_page
+      state: absent
+    listen: "cleanup"
+    changed_when: False
 ...

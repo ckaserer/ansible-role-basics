@@ -1,0 +1,14 @@
+---
+  - name: Verify
+    hosts: all
+    become: true
+    tasks:
+      - name: Check gdm is running
+        service:
+          name: gdm
+          state: started
+          enabled: true
+        check_mode: true
+        register: gdm
+        failed_when: gdm.changed
+...
