@@ -1,0 +1,47 @@
+---
+  - name: Verify
+    hosts: all
+    become: true
+    tasks:
+      - name: Check if users have been created and pw file has been saved
+        stat:
+          path: "/home/{{ item }}/.password"
+        with_items:
+          - gepardec
+          - vagrant
+        register: check_user_home_pw
+        failed_when: not check_user_home_pw.stat.exists
+
+      - name: Make sure we have a 'wheel' group
+        group:
+          name: wheel
+          state: present
+        check_mode: yes
+        register: verify_wheel_group
+        failed_when: verify_wheel_group.changed
+        
+      - name: Allow 'wheel' group to have passwordless sudo
+        lineinfile:
+          dest: /etc/sudoers
+          state: present
+          regexp: '^%wheel'
+          line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+          validate: 'visudo -cf %s'
+          mode: '0440'
+        check_mode: yes
+        register: verify_pwless_wheel_group
+        failed_when: verify_pwless_wheel_group.changed
+        
+      - name: Check users are part of the wheel group
+        user:
+          name: "{{ item }}"
+          groups: 'wheel'
+          append: true
+          state: present
+        check_mode: yes
+        register: verify_users_wheel_group
+        failed_when: verify_users_wheel_group.changed
+        with_items:
+          - gepardec
+          - vagrant
+...

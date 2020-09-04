@@ -1,0 +1,19 @@
+---
+  - name: Converge
+    hosts: all
+    tasks:
+      - name: "Include ansible-role-basics"
+        include_role:
+          name: "ansible-role-basics"
+          apply:
+            become: true
+        vars:
+          basics_bashrc:
+            enabled: false
+          basics_users:
+            enabled: true
+            sudo: false
+            users:
+              - vagrant
+              - gepardec
+...

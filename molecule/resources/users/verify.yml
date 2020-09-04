@@ -1,0 +1,14 @@
+---
+  - name: Verify
+    hosts: all
+    become: true
+    tasks:  
+      - name: Check if users have been created and pw file has been saved
+        stat:
+          path: "/home/{{ item }}/.password"
+        with_items:
+          - gepardec
+          - vagrant
+        register: check_user_home_pw
+        failed_when: not check_user_home_pw.stat.exists
+...

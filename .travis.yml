@@ -38,12 +38,20 @@ install:
 env:
   jobs:
     - SCENARIO=defaults
+    
     - SCENARIO=bashrc
     - SCENARIO=bashrc-global
     - SCENARIO=bashrc-with-multiple-users
+    
+    - SCENARIO=keymap
+    
     - SCENARIO=packages
     - SCENARIO=packages-epel
+    
     - SCENARIO=timezone
+    
+    - SCENARIO=users
+    - SCENARIO=users-with-sudo
 script:
   - molecule test --scenario-name ci-${SCENARIO}
 ...
