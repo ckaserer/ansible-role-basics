@@ -15,7 +15,7 @@
   
   basics_keymap:
     enabled: false
-    value: DE
+    value: de
   
   basics_bashrc: 
     enabled: true

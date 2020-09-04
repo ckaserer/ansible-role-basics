@@ -1,0 +1,23 @@
+---
+  dependency:
+    name: galaxy
+  driver:
+    name: vagrant
+    provider:
+      name: virtualbox
+  platforms:
+    - name: ansible-role-basics
+      box: centos/7
+      cpus: 1
+      memory: 2048
+  provisioner:
+    name: ansible
+    playbooks:
+      converge: ../resources/keymap/converge.yml
+      verify: ../resources/keymap/verify.yml
+  verifier:
+    name: ansible
+  lint: |
+    set -e
+    ansible-lint .
+...

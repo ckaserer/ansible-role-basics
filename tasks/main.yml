@@ -4,6 +4,11 @@
       name: "{{ basics_timezone.value }}"
     when: basics_timezone.enabled
 
+  - name: Apply keymap {{ basics_keymap.value }}
+    shell: "localectl set-keymap {{ basics_keymap.value }}"
+    changed_when: False
+    when: basics_keymap.enabled
+
   - name: Include user tasks
     include_tasks: "users.yml"
     when: basics_users.enabled

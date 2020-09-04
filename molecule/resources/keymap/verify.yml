@@ -1,0 +1,9 @@
+---
+  - name: Verify
+    hosts: all
+    become: true
+    tasks:
+      - name: Check keymap is set to DE
+        shell: "localectl status | grep -i 'vc keymap: de'"
+        changed_when: false
+...
