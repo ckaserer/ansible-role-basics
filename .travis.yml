@@ -5,6 +5,10 @@ dist: bionic
 language: python
 python:
   - "3.6"
+cache:
+  pip: true
+  directories:
+    - "/home/travis/.vagrant.d/boxes"
 notifications:
   email:
     on_success: never
