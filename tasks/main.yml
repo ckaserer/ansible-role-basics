@@ -16,8 +16,8 @@
   - name: Include user tasks
     include_tasks: "users.yml"
     when:
-      - basics_user.enabled is defined
-      - basics_user.enabled
+      - basics_users.enabled is defined
+      - basics_users.enabled
 
   - name: Include bashrc tasks
     include_tasks: "bashrc.yml"
