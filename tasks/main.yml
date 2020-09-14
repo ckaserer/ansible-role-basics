@@ -2,20 +2,20 @@
   - name: Set timezone to {{ basics_timezone.value }}
     timezone:
       name: "{{ basics_timezone.value }}"
-    when: 
+    when:
       - basics_timezone.enabled is defined
       - basics_timezone.enabled
 
   - name: Apply keymap {{ basics_keymap.value }}
     command: "localectl set-keymap {{ basics_keymap.value }}"
     changed_when: False
-    when: 
+    when:
       - basics_keymap.enabled is defined
       - basics_keymap.enabled
 
   - name: Include user tasks
     include_tasks: "users.yml"
-    when: 
+    when:
       - basics_user.enabled is defined
       - basics_user.enabled
 
@@ -35,7 +35,7 @@
     yum:
       name: epel-release
       state: present
-    when: 
+    when:
       - basics_packages.epel is defined
       - basics_packages.epel
 
@@ -43,7 +43,7 @@
     package:
       name: "{{ basics_packages.packages }}"
       state: present
-    when: 
+    when:
       - basics_packages.enabled is defined
       - basics_packages.enabled
 ...
