@@ -17,5 +17,5 @@
             enabled: true
             autologin_user: vagrant
             remote_desktop:
-              enabled: false
+              enabled: true
 ...

@@ -79,8 +79,7 @@
 
   - name: Install remote desktop
     yum:
-      name: "https://download.nomachine.com/packages/{{ bashrc_remote_desktop_version_path.stdout }}
-        -PRODUCTION/Linux/nomachine-enterprise-desktop_{{ bashrc_remote_desktop_full_version.stdout }}_x86_64.rpm"
+      name: "https://download.nomachine.com/packages/{{ bashrc_remote_desktop_version_path.stdout }}-PRODUCTION/Linux/nomachine-enterprise-desktop_{{ bashrc_remote_desktop_full_version.stdout }}_x86_64.rpm"
       state: present
     when:
       - basics_desktop.remote_desktop is defined

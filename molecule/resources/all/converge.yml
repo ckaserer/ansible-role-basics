@@ -31,7 +31,7 @@
             autologin_user: vagrant
             remote_desktop:
               enabled: true
-          basics_timezone: 
+          basics_timezone:
             enabled: true
             value: Europe/Vienna
 ...
